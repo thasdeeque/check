@@ -98,27 +98,6 @@ html.reduce-animations .grain-overlay { display:none; }
 .edge-flash.error { box-shadow:inset 0 0 60px rgba(255,59,48,0.5), inset 0 0 120px rgba(255,59,48,0.2); }
 .edge-flash.success { box-shadow:inset 0 0 60px rgba(52,199,89,0.5), inset 0 0 120px rgba(52,199,89,0.2); }
 
-/* ============ AMBIENT EDGE GLOW (notch/pinhole-aware) ============ */
-/* Traces the screen perimeter. The path is rebuilt in JS from the device's
-   own env(safe-area-inset-top) value, so on a notch/Dynamic-Island/punch-hole
-   device the line automatically dips down and goes around that zone instead
-   of cutting straight through it; on a device with no real cutout it just
-   hugs the flat top edge. Sits just under .edge-flash so a success/error
-   flash still reads clearly on top of it. */
-.edge-glow-svg {
-  position:fixed;
-  inset:0;
-  width:100%;
-  height:100%;
-  pointer-events:none;
-  z-index:399;
-  animation:edgeGlowPulse 5s ease-in-out infinite alternate;
-}
-@keyframes edgeGlowPulse { 0%{opacity:0.75;} 100%{opacity:1;} }
-html.reduce-animations .edge-glow-svg { animation:none; }
-html.reduce-effects .edge-glow-svg { display:none; }
-#edgeGlowSoft { filter:blur(8px); }
-
 /* ============ LANGUAGE TOGGLE ============ */
 .lang-toggle { position:relative; display:inline-flex; align-items:center; width:86px; height:32px; background:var(--input-bg); border:1px solid var(--border); border-radius:999px; cursor:pointer; user-select:none; flex-shrink:0; }
 .lang-toggle .lang-thumb { position:absolute; top:2px; left:2px; width:calc(50% - 2px); height:calc(100% - 4px); background:var(--accent); border-radius:999px; z-index:1; transition:transform 0.25s ease; }
@@ -264,7 +243,7 @@ html.light .topbar.scrolled { background:rgba(245,245,245,0.85); }
 .empty-state .empty-ill { width:80px; height:80px; margin:0 auto 16px; border-radius:20px; background:var(--card); display:flex; align-items:center; justify-content:center; border:1px solid var(--border); backdrop-filter:blur(12px) saturate(140%); -webkit-backdrop-filter:blur(12px) saturate(140%); }
 .empty-state p { font-size:14px; margin:0; }
 
-/* ============ BOTTOM NAV (TRUE PILL SHAPE - THEME INVERTED + SKEUOMORPHIC) ============ */
+/* ============ BOTTOM NAV (TRUE PILL SHAPE, FLAT - matches nav-preview.html) ============ */
 /* Light app theme -> BLACK pill, WHITE active circle.
    Dark app theme  -> WHITE pill, BLACK active circle.
    Margin is a fixed 16px from each screen edge, so the pill always reads at the
@@ -281,24 +260,22 @@ html.light .topbar.scrolled { background:rgba(245,245,245,0.85); }
   animation:navSlideIn 0.4s cubic-bezier(0.16,1,0.3,1) both;
   box-sizing:border-box;
 }
-/* True pill: radius = half the bar height (stadium shape). Theme-inverted +
-   skeuomorphic raised glass: soft top highlight, deep contact shadow underneath. */
+/* True pill: radius = half the bar height (stadium shape). Flat fill, no
+   skeuomorphic bevel - just blur/saturate backdrop + a soft drop shadow. */
 .bottom-nav::before {
   content:'';
   position:absolute;
   inset:0;
-  background:#0a0a0a;
-  backdrop-filter:blur(20px) saturate(160%);
-  -webkit-backdrop-filter:blur(20px) saturate(160%);
+  background:#000;
+  backdrop-filter:blur(18px) saturate(160%);
+  -webkit-backdrop-filter:blur(18px) saturate(160%);
   border-radius:999px;
-  border:1px solid rgba(255,255,255,0.08);
-  box-shadow:0 10px 32px rgba(0,0,0,0.4), 0 2px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.12), inset 0 -1px 0 rgba(0,0,0,0.4);
-  transition:background 0.35s ease, border-color 0.35s ease;
+  box-shadow:0 10px 32px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.06);
+  transition:background 0.35s ease;
 }
-html.light .bottom-nav::before {
+html:not(.light) .bottom-nav::before {
   background:#fff;
-  border-color:rgba(0,0,0,0.06);
-  box-shadow:0 10px 32px rgba(0,0,0,0.16), 0 2px 8px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -1px 0 rgba(0,0,0,0.05);
+  box-shadow:0 10px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.7);
 }
 .nav-bar {
   position:relative;
@@ -319,30 +296,30 @@ html.light .bottom-nav::before {
   width:44px;
   height:44px;
   border-radius:50%;
-  color:rgba(255,255,255,0.5);   /* light theme -> black pill -> light gray icons */
-  transition:color 0.3s ease, transform 0.18s cubic-bezier(0.32,1.15,0.56,1);
+  transition:color 0.3s ease;
   z-index:2;
   background:transparent;
 }
-html.light .nav-tab { color:rgba(255,255,255,0.5); }   /* black pill, light gray inactive icons */
-html:not(.light) .nav-tab { color:rgba(0,0,0,0.4); }   /* white pill (dark theme), dark gray inactive icons */
+html.light .nav-tab { color:rgba(255,255,255,0.55); }  /* black pill -> light gray inactive icons */
+html:not(.light) .nav-tab { color:rgba(0,0,0,0.45); }  /* white pill (dark theme) -> dark gray inactive icons */
 .nav-tab svg {
   width:21px;
   height:21px;
-  transition:transform 0.25s cubic-bezier(0.32,1.15,0.56,1);
+  transition:color 0.3s ease, transform 0.25s cubic-bezier(0.34,1.56,0.64,1);
   position:relative;
   z-index:2;
 }
-.nav-tab:active { transform:scale(0.86); }
 /* Active tab: icon flips to contrast against the indicator circle underneath it.
    Light theme -> black pill -> white circle -> icon turns black.
    Dark theme  -> white pill -> black circle -> icon turns white. */
 html.light .nav-tab.active { color:#000; }
 html:not(.light) .nav-tab.active { color:#fff; }
-.nav-tab.active svg { transform:scale(1.08); }
+.nav-tab.active svg { transform:scale(1.06); }
+.nav-tab:active svg { transform:scale(0.88); }
 
-/* Sliding indicator: straight horizontal travel only (no roll, no vertical arc).
-   A tiny spring overshoot - just barely creeps past the target before settling. */
+/* Sliding indicator: straight horizontal travel only, plain flat circle, no
+   bevel/inset shadow. A tiny spring overshoot on the transition - just barely
+   creeps past the target before settling. */
 .nav-indicator {
   position:absolute;
   top:50%;
@@ -351,22 +328,21 @@ html:not(.light) .nav-tab.active { color:#fff; }
   height:44px;
   border-radius:50%;
   transform:translateY(-50%) translateX(0);
-  transition:transform 0.4s cubic-bezier(0.32, 1.15, 0.56, 1);
+  transition:transform 0.38s cubic-bezier(0.32, 1.15, 0.56, 1);
   pointer-events:none;
   z-index:1;
   will-change:transform;
 }
 /* Indicator fill: white circle on the black pill (light theme), black circle on
-   the white pill (dark theme) - with a subtle skeuomorphic bevel/highlight. */
+   the white pill (dark theme) - flat fill, just a soft drop shadow. */
 html.light .nav-indicator {
   background:#fff;
-  box-shadow:0 3px 10px rgba(0,0,0,0.35), 0 1px 0 rgba(255,255,255,0.9) inset, 0 -2px 4px rgba(0,0,0,0.08) inset;
+  box-shadow:0 3px 10px rgba(0,0,0,0.3);
 }
 html:not(.light) .nav-indicator {
   background:#000;
-  box-shadow:0 3px 10px rgba(0,0,0,0.45), 0 1px 0 rgba(255,255,255,0.18) inset, 0 -2px 4px rgba(0,0,0,0.5) inset;
+  box-shadow:0 3px 10px rgba(0,0,0,0.18);
 }
-.nav-indicator.is-pressed { transform:translateY(-50%) translateX(var(--nx, 0)) scale(0.9); }
 
 
 /* ============ FAB (BLACK & WHITE PLUS ICON) ============ */
@@ -650,22 +626,6 @@ html.reduce-animations .splash-letter {
 <!-- Edge flash effects -->
 <div class="edge-flash" id="edgeFlash"></div>
 
-<!-- Ambient edge lighting - traces the screen perimeter and automatically
-     dips around the notch / Dynamic Island / camera pinhole using the
-     device's own safe-area-inset-top value, so it adapts to whatever device
-     it's running on without hardcoding any specific phone's cutout shape. -->
-<svg class="edge-glow-svg" id="edgeGlowSvg" aria-hidden="true">
-  <defs>
-    <linearGradient id="edgeGlowGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#2979ff"/>
-      <stop offset="50%" stop-color="#8b5cf6"/>
-      <stop offset="100%" stop-color="#2979ff"/>
-    </linearGradient>
-  </defs>
-  <path id="edgeGlowSoft" d="" fill="none" stroke="url(#edgeGlowGradient)" stroke-width="10" stroke-linejoin="round" opacity="0.35"></path>
-  <path id="edgeGlowCore" d="" fill="none" stroke="url(#edgeGlowGradient)" stroke-width="1.5" stroke-linejoin="round" opacity="0.9"></path>
-</svg>
-
 <!-- Overscroll glow indicators -->
 <div class="overscroll-glow top" id="overscrollTop"></div>
 <div class="overscroll-glow bottom" id="overscrollBottom"></div>
@@ -746,7 +706,7 @@ html.reduce-animations .splash-letter {
 
   <nav class="bottom-nav" id="bottomNav">
     <div class="nav-bar">
-      <div class="nav-indicator" id="navIndicator"><div class="nav-indicator-inner" id="navIndicatorInner"></div></div>
+      <div class="nav-indicator" id="navIndicator"></div>
       <button class="nav-tab active" data-tab="me">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a7 7 0 0 1 14 0v1"/></svg>
       </button>
@@ -1086,7 +1046,7 @@ function resetCardTilt() {
 function showEdgeFlash(type) {
   const el = document.getElementById('edgeFlash');
   el.className = 'edge-flash ' + type + ' show';
-  setTimeout(() => { el.classList.remove('show'); }, 600);
+  setTimeout(() => { el.classList.remove('show'); }, 2000);
 }
 
 /* ── OVERSCROLL GLOW ──────────────────────────────────────── */
@@ -1101,152 +1061,33 @@ function initOverscrollGlow() {
   });
 }
 
-/* ── AMBIENT EDGE GLOW (auto dips around the notch / Dynamic Island / pinhole) ──
-   The web has no API that reveals the literal shape of a device's camera
-   cutout, but env(safe-area-inset-top) reliably tells us how much room that
-   cutout (plus the status bar) needs - iOS fills it in correctly per device.
-   We read that value and use it as the depth of a flat dip cut into the top
-   of the glow's outline, centered on screen. Devices with a real notch/island
-   report a large inset, so the dip is clearly visible and the line goes
-   around the cutout; devices with just a plain status bar report a small
-   inset, so the dip is negligible and the line just hugs the top edge. */
-function readSafeAreaInsetTop() {
-  let probe = document.getElementById('safeAreaProbe');
-  if (!probe) {
-    probe = document.createElement('div');
-    probe.id = 'safeAreaProbe';
-    probe.style.cssText = 'position:fixed;top:0;left:0;width:0;height:0;padding-top:env(safe-area-inset-top,0px);pointer-events:none;visibility:hidden;';
-    document.body.appendChild(probe);
-  }
-  return parseFloat(getComputedStyle(probe).paddingTop) || 0;
-}
-function buildEdgeGlowPath(vw, vh, inset) {
-  const m = 2; // small inset so the stroke isn't clipped by the viewport edge
-  const r = Math.max(0, Math.min(36, vw / 2 - m, vh / 2 - m));
-  const hasNotch = inset > 30; // plain status bars report small insets; real cutouts report large ones
-  const dipDepth = hasNotch ? Math.max(0, inset - m - 2) : 0;
-  const dipHalfWidth = Math.min(100, vw * 0.17);
-  const cx = vw / 2;
-  let d = `M ${m + r} ${m} `;
-  if (dipDepth > 0) {
-    d += `L ${cx - dipHalfWidth} ${m} `;
-    d += `L ${cx - dipHalfWidth} ${m + dipDepth} `;
-    d += `L ${cx + dipHalfWidth} ${m + dipDepth} `;
-    d += `L ${cx + dipHalfWidth} ${m} `;
-  }
-  d += `L ${vw - m - r} ${m} `;
-  d += `A ${r} ${r} 0 0 1 ${vw - m} ${m + r} `;
-  d += `L ${vw - m} ${vh - m - r} `;
-  d += `A ${r} ${r} 0 0 1 ${vw - m - r} ${vh - m} `;
-  d += `L ${m + r} ${vh - m} `;
-  d += `A ${r} ${r} 0 0 1 ${m} ${vh - m - r} `;
-  d += `L ${m} ${m + r} `;
-  d += `A ${r} ${r} 0 0 1 ${m + r} ${m} Z`;
-  return d;
-}
-function initEdgeGlow() {
-  const svg = document.getElementById('edgeGlowSvg');
-  const core = document.getElementById('edgeGlowCore');
-  const soft = document.getElementById('edgeGlowSoft');
-  if (!svg || !core || !soft) return;
-  const draw = () => {
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
-    svg.setAttribute('viewBox', `0 0 ${vw} ${vh}`);
-    const d = buildEdgeGlowPath(vw, vh, readSafeAreaInsetTop());
-    core.setAttribute('d', d);
-    soft.setAttribute('d', d);
-  };
-  draw();
-  window.addEventListener('resize', draw);
-  window.addEventListener('orientationchange', () => setTimeout(draw, 200));
-}
-
-/* ── NAV INDICATOR (ROLLING + SYNCED MOTION BLUR + LANDING BOUNCE) ──── */
-/* The circle glides between tabs AND rotates by an amount proportional to the
-   distance travelled - like a ball rolling across the bar. The rotation, the
-   motion blur, and the position all ride the SAME transition/duration, so
-   they start and stop in perfect sync - no separate timeout means no lingering
-   blur tail. The instant the glide lands, the inner fill gets a quick
-   squash/stretch bounce. */
-let _navRollCleanup = null;
+/* ── NAV INDICATOR (plain horizontal glide, matches nav-preview.html) ──── */
+/* Straight slide only - no rotation, no motion blur, no landing bounce.
+   The spring overshoot comes entirely from the CSS transition's cubic-bezier
+   on .nav-indicator (a tiny creep past the target before settling). */
 function updateNavIndicator(tabBtn, animate) {
   const indicator = document.getElementById('navIndicator');
-  const inner = document.getElementById('navIndicatorInner');
   const bar = document.querySelector('.nav-bar');
   if (!indicator || !tabBtn || !bar) return;
-  // Use offsetWidth (NOT getBoundingClientRect) for the indicator's size.
-  // getBoundingClientRect reports the axis-aligned box of the ROTATED element,
-  // which is wider than 44px at most angles - that was feeding a corrupted
-  // width into the centering math below and landing the circle off to the
-  // side instead of centered. offsetWidth ignores transforms entirely.
   const indW = indicator.offsetWidth || 44;
   const barRect = bar.getBoundingClientRect();
   const btnRect = tabBtn.getBoundingClientRect();
   // Center the indicator on the active tab button
-  const left = btnRect.left - barRect.left + (btnRect.width - indW) / 2;
+  const x = btnRect.left - barRect.left + (btnRect.width - indW) / 2;
 
   if (!animate) {
     // Instant snap (initial position, resize, orientation change, or the nav
-    // becoming visible for the first time). No rolling, no blur, no bounce.
+    // becoming visible for the first time).
     indicator.style.transition = 'none';
-    indicator.style.left = left + 'px';
-    indicator.style.transform = 'translateY(-50%) rotate(0deg)';
-    indicator.style.filter = 'blur(0px)';
-    // Force reflow then restore transition for next animated glide
-    void indicator.offsetWidth;
+    indicator.style.transform = `translateY(-50%) translateX(${x}px)`;
+    void indicator.offsetWidth; // force reflow then restore transition
     indicator.style.transition = '';
     return;
   }
 
-  // Animated glide WITH rolling rotation.
-  // Distance travelled → rotation amount. Roughly mimic a wheel of diameter indW:
-  // one full rotation per ~π·d pixels of travel. Scaled down a touch so it
-  // doesn't look frantic on long slides.
-  const currentLeft = parseFloat(indicator.style.left) || 0;
-  const distance = left - currentLeft;
-  // circumference ≈ π · indW; we rotate by (distance / circumference) · 360deg
-  // but cap the visual rotation so short hops still read as a small roll.
-  const circumference = Math.PI * indW;
-  const rollDegrees = (distance / circumference) * 360;
-
-  // Motion blur: jump to blurred INSTANTLY (transition disabled for the jump),
-  // then let it ease back to 0 on the very same transition as left/transform -
-  // so it's only ever blurred *while* actually moving, and clears the instant
-  // the move stops, with no separate timer that could leave it lingering.
-  indicator.style.transition = 'none';
-  indicator.style.filter = 'blur(3px)';
-  void indicator.offsetWidth; // force reflow before re-enabling the transition
-  indicator.style.transition = '';
-
-  // Compose the new transform: keep vertical centering, add the new rotation
-  indicator.style.transform = `translateY(-50%) rotate(${rollDegrees}deg)`;
-  indicator.style.left = left + 'px';
-  indicator.style.filter = 'blur(0px)';
-
-  // Clear any previous cleanup listener so we don't stack them on rapid taps
-  if (_navRollCleanup) _navRollCleanup();
-  if (inner) inner.classList.remove('is-bouncing');
-  // When the `left` transition ends, the rotation + blur end at the exact same
-  // instant (same duration/easing). Then fire the landing bounce.
-  const onEnd = (e) => {
-    if (e.propertyName !== 'left' && e.propertyName !== 'transform') return;
-    indicator.removeEventListener('transitionend', onEnd);
-    _navRollCleanup = null;
-    if (inner) {
-      inner.classList.remove('is-bouncing');
-      void inner.offsetWidth; // restart the keyframe animation cleanly
-      inner.classList.add('is-bouncing');
-    }
-  };
-  indicator.addEventListener('transitionend', onEnd);
-  _navRollCleanup = () => indicator.removeEventListener('transitionend', onEnd);
+  // Animated glide - the overshoot/settle feel comes from the CSS transition.
+  indicator.style.transform = `translateY(-50%) translateX(${x}px)`;
 }
-// Tidy up the bounce class once its one-shot animation finishes
-(() => {
-  const inner = document.getElementById('navIndicatorInner');
-  if (inner) inner.addEventListener('animationend', () => inner.classList.remove('is-bouncing'));
-})();
 
 /* Re-align indicator on resize / orientation change so it always
    matches the active tab regardless of screen size */
@@ -1635,7 +1476,6 @@ function onLoginSuccess() {
           initScrollAwareFab();
           initOverscrollGlow();
           initGyroscope();
-          initEdgeGlow();
           // Position nav indicator
           const firstTab = document.querySelector('.nav-tab.active');
           if (firstTab) updateNavIndicator(firstTab, false);
