@@ -77,7 +77,8 @@ html.light.reduce-effects .search-bar-wrap,
 html.light.reduce-effects .skeleton-card,
 html.light.reduce-effects .empty-state .empty-ill,
 html.light.reduce-effects .filter-opt { background: #f2f2f7 !important; }
-html.reduce-effects .bottom-nav::before { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+html.reduce-effects .bottom-nav::before { backdrop-filter: none !important; -webkit-backdrop-filter: none !important; background:#111 !important; }
+html.light.reduce-effects .bottom-nav::before { background:#e8e8e8 !important; }
 html.reduce-effects .gradient-bg { display: none !important; }
 html.reduce-effects .grain-overlay { display: none !important; }
 /* Kill continuous ambient animations when effects off */
@@ -520,6 +521,70 @@ html.light .ai-fab {
 .photo-up-thumb img { width:100%; height:100%; object-fit:cover; }
 .photo-up-thumb .rm { position:absolute; top:3px; right:3px; width:20px; height:20px; border-radius:50%; background:rgba(255,59,48,0.9); color:#fff; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; cursor:pointer; }
 
+/* ============ RESPONSIVE CARD GRID ============ */
+@media (min-width:640px) {
+  #list-me, #list-everyone, #list-fixed, #list-search {
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(320px, 1fr));
+    gap:12px;
+  }
+  #list-me .obs-card-flip-container,
+  #list-everyone .obs-card-flip-container,
+  #list-fixed .obs-card-flip-container,
+  #list-search .obs-card-flip-container { margin-bottom:0; }
+  #list-me .obs-card,
+  #list-everyone .obs-card,
+  #list-fixed .obs-card,
+  #list-search .obs-card { margin-bottom:0; }
+}
+
+/* ============ BOUNCY BUTTON SPRING ============ */
+.btn-primary,
+.btn-cancel,
+.btn-confirm,
+.btn-danger,
+.btn-secondary,
+.btn-fixed,
+.btn-delete-obs,
+.risk-btn,
+.filter-opt,
+.cm-cancel,
+.motion-enable-btn,
+.lang-toggle,
+.nav-tab,
+.fab,
+.ai-fab,
+.chat-send,
+.icon-btn,
+.pw-toggle,
+.photo-add,
+.dropdown-trigger,
+.drawer-row {
+  transition-property: transform, box-shadow, background, color, border-color, opacity;
+  transition-duration: 0.18s;
+  transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.btn-primary:active,
+.btn-cancel:active,
+.btn-confirm:active,
+.btn-danger:active,
+.btn-secondary:active,
+.btn-fixed:active,
+.btn-delete-obs:active,
+.risk-btn:active,
+.filter-opt:active,
+.cm-cancel:active,
+.cm-opt:active,
+.motion-enable-btn:active,
+.chat-send:active,
+.icon-btn:active,
+.pw-toggle:active,
+.photo-add:active,
+.dropdown-trigger:active,
+.drawer-row:active { transform:scale(0.94); }
+.lang-toggle:active { transform:scale(0.93); }
+.nav-tab:active svg { transform:scale(0.82) !important; }
+
 /* ============ DROPDOWN ============ */
 .dropdown { position:relative; }
 .dropdown-trigger { width:100%; display:flex; align-items:center; justify-content:space-between; background:var(--input-bg); border:1px solid var(--border); border-radius:var(--radius-input); padding:13px 14px; font-size:15px; color:var(--text); text-align:left; transition:border 0.2s ease; }
@@ -527,7 +592,8 @@ html.light .ai-fab {
 .dropdown-trigger.invalid { border-color:var(--critical); }
 .dropdown-trigger svg { flex-shrink:0; transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1); }
 .dropdown.open .dropdown-trigger svg { transform:rotate(180deg); }
-.dropdown-menu { position:absolute; top:calc(100% + 4px); left:0; right:0; background:var(--card); border:1px solid var(--border); border-radius:var(--radius-input); overflow:hidden; z-index:50; -webkit- box-shadow:0 8px 24px rgba(0,0,0,0.2); display:none; max-height:220px; overflow-y:auto; }
+.dropdown-menu { position:absolute; top:calc(100% + 4px); left:0; right:0; background:#1e1e1e; border:1px solid var(--border); border-radius:var(--radius-input); overflow:hidden; z-index:50; box-shadow:0 8px 24px rgba(0,0,0,0.35); display:none; max-height:220px; overflow-y:auto; }
+html.light .dropdown-menu { background:#f0f0f0; }
 .dropdown.open .dropdown-menu { display:block; animation:dropFlipOpen 0.3s cubic-bezier(0.22,1,0.36,1) both; }
 @keyframes dropFlipOpen { from{opacity:0;transform:translateY(-8px);} to{opacity:1;transform:translateY(0);} }
 .dropdown-option { padding:13px 14px; font-size:14px; cursor:pointer; transition:background 0.15s ease; }
@@ -646,33 +712,9 @@ html.reduce-animations .splash-letter {
 .video-loader { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; z-index:1; }
 .video-loader .spinner { width:32px; height:32px; border:3px solid rgba(255,255,255,0.2); border-top-color:#fff; border-radius:50%; animation:spin 0.7s linear infinite; }
 
-/* ============ CARD SPECULAR LIGHT EDGE ============ */
-.obs-card::after {
-  content:'';
-  position:absolute;
-  inset:0;
-  border-radius:inherit;
-  pointer-events:none;
-  z-index:10;
-  opacity:0;
-  transition:opacity 0.2s ease;
-  background:linear-gradient(var(--spec-angle,135deg), transparent 42%, rgba(255,255,255,0.05) 47%, rgba(255,255,255,0.18) 50%, rgba(255,255,255,0.05) 53%, transparent 58%);
-}
-html.light .obs-card::after {
-  background:linear-gradient(var(--spec-angle,135deg), transparent 42%, rgba(255,255,255,0.1) 47%, rgba(255,255,255,0.35) 50%, rgba(255,255,255,0.1) 53%, transparent 58%);
-}
-.obs-card.spec-active::after { opacity:1; }
+/* CARD SPECULAR LIGHT REMOVED */
 
-/* ============ MOTION PERMISSION PROMPT ============ */
-.motion-prompt { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; z-index:160; background:rgba(0,0,0,0.3); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); opacity:0; pointer-events:none; transition:opacity 0.3s ease; }
-.motion-prompt.show { opacity:1; pointer-events:auto; }
-.motion-card { background:var(--card); border:1px solid var(--border); border-radius:20px; padding:28px 24px; text-align:center; max-width:300px; width:90%; backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); box-shadow:0 10px 40px rgba(0,0,0,0.4), 0 1px 0 rgba(255,255,255,0.1) inset; animation:fadeSlideUp 0.4s cubic-bezier(0.22,1,0.36,1) both; }
-.motion-card h3 { font-size:17px; font-weight:800; margin:0 0 8px; }
-.motion-card p { font-size:13px; color:var(--text-secondary); margin:0 0 18px; line-height:1.5; }
-.motion-enable-btn { display:inline-flex; align-items:center; gap:8px; padding:12px 24px; background:var(--accent); color:#fff; border-radius:999px; font-size:14px; font-weight:700; transition:transform 0.15s cubic-bezier(0.32,1.15,0.56,1), box-shadow 0.15s ease; box-shadow:0 4px 16px rgba(41,121,255,0.4), 0 1px 0 rgba(255,255,255,0.2) inset; }
-.motion-enable-btn:active { transform:scale(0.96); box-shadow:0 2px 8px rgba(41,121,255,0.3), 0 1px 0 rgba(0,0,0,0.2) inset; }
-.motion-skip { display:block; margin-top:12px; color:var(--text-secondary); font-size:12px; cursor:pointer; padding:8px; transition:color 0.15s ease; }
-.motion-skip:active { color:var(--text); }
+/* MOTION PROMPT REMOVED */
 
 /* ============ BACKDROP-FILTER FALLBACK (old devices) ============ */
 @supports not (backdrop-filter:blur(1px)) {
@@ -680,8 +722,7 @@ html.light .obs-card::after {
   html:not(.light) .bottom-nav::before { background:#fff !important; }
   .obs-card { background:rgba(26,26,26,0.95) !important; }
   html.light .obs-card { background:rgba(255,255,255,0.95) !important; }
-  .motion-card { background:rgba(26,26,26,0.95) !important; }
-  html.light .motion-card { background:rgba(255,255,255,0.95) !important; }
+
 }
 </style>
 </head>
@@ -703,7 +744,7 @@ html.light .obs-card::after {
 <!-- ============ VIDEO INTRO ============ -->
 <div class="video-intro hidden" id="videoIntro">
   <div class="video-loader" id="videoLoader"><div class="spinner"></div></div>
-  <video id="introVideo" src="vid.mp4" playsinline webkit-playsinline preload="auto" muted></video>
+  <video id="introVideo" playsinline webkit-playsinline preload="auto" muted></video>
 </div>
 
 <!-- ============ LOGIN ============ -->
@@ -1021,18 +1062,7 @@ html.light .obs-card::after {
   <div class="iv-counter" id="ivCounter"></div>
 </div>
 
-<!-- ============ MOTION PERMISSION PROMPT ============ -->
-<div class="motion-prompt" id="motionPrompt">
-  <div class="motion-card">
-    <h3>Enable Motion</h3>
-    <p>Allow motion access for an immersive card tilt experience.</p>
-    <button class="motion-enable-btn" id="motionEnableBtn">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2 7h7l-5.5 4 2 7L12 16l-5.5 4 2-7L3 9h7z"/></svg>
-      Enable Motion
-    </button>
-    <span class="motion-skip" id="motionSkipBtn">Skip</span>
-  </div>
-</div>
+<!-- MOTION PROMPT REMOVED -->
 
 <!-- ============ LOADING OVERLAY ============ -->
 <div class="loading-overlay hidden" id="loadingOverlay"><div class="spinner"></div></div>
@@ -1084,12 +1114,13 @@ const Haptic = {
     if (!this.enabled) return;
     try { navigator.vibrate && navigator.vibrate(pattern); } catch(e) {}
   },
-  light()   { this._v(10); },
-  medium()  { this._v(25); },
-  heavy()   { this._v(50); },
-  success() { this._v([10, 20, 30, 20, 10]); },
-  warning() { this._v([50, 30, 50]); },
-  double()  { this._v([10, 50, 10]); },
+  light()   { this._v(20); },
+  medium()  { this._v(20); },
+  heavy()   { this._v(20); },
+  nav()     { this._v(60); },
+  success() { this._v([20, 30, 20]); },
+  warning() { this._v([40, 30, 40]); },
+  double()  { this._v([20, 50, 20]); },
   heartbeat(){ this._v([30, 100, 30]); }
 };
 
@@ -1123,127 +1154,26 @@ function initGrain() {
   setInterval(draw, 100);
 }
 
-/* ── GYROSCOPE TILT + SPECULAR LIGHT EDGE + MOUSE PARALLAX ──── */
-let gyroEnabled = true;
-let gyroPermissionGranted = false;
-let gyroActive = false;
-let hoveredCard = null;
-const TILT_MAX = 12;
-const TILT_GYRO_SCALE = 0.8;
+/* ── GYROSCOPE / TILT / SPECULAR — REMOVED ───────────────── */
+function resetAllCardTilts() {} // kept as stub (called by animToggle)
+function initGyroscope() {}
+function initMouseParallax() {}
 
-function applyCardTilt(card, rotateX, rotateY) {
-  if (!card || !animationsEnabled) return;
-  card.style.transform = 'perspective(800px) rotateX(' + rotateX.toFixed(2) + 'deg) rotateY(' + rotateY.toFixed(2) + 'deg)';
-  const specAngle = Math.atan2(rotateY, -rotateX) * (180 / Math.PI);
-  card.style.setProperty('--spec-angle', (specAngle < 0 ? specAngle + 360 : specAngle).toFixed(1) + 'deg');
-  card.classList.add('spec-active');
-}
-
-function resetCardTilt(card) {
-  if (!card) return;
-  card.style.transform = '';
-  card.style.removeProperty('--spec-angle');
-  card.classList.remove('spec-active');
-}
-
-function resetAllCardTilts() {
-  document.querySelectorAll('.obs-card').forEach(card => resetCardTilt(card));
-  hoveredCard = null;
-}
-
-function initGyroscope() {
-  if (!window.DeviceOrientationEvent) { gyroEnabled = false; return; }
-  if (typeof DeviceOrientationEvent.requestPermission === 'function') {
-    const wasGranted = localStorage.getItem('sbo_gyro_granted');
-    if (wasGranted === 'true') {
-      requestGyroPermission(true);
-    }
-  } else {
-    startGyroListener();
+/* ── LOW-END DEVICE AUTO-DETECT ──────────────────────────── */
+(function autoDetectLowEnd() {
+  const cores = navigator.hardwareConcurrency || 4;
+  const mem   = navigator.deviceMemory || 4;
+  if (cores <= 4 || mem <= 2) {
+    animationsEnabled = false;
+    effectsEnabled    = false;
+    const animTog = document.getElementById('animToggle');
+    const effTog  = document.getElementById('effectsToggle');
+    if (animTog) animTog.checked = false;
+    if (effTog)  effTog.checked  = false;
+    updateAnimationsState();
+    updateEffectsState();
   }
-}
-
-function requestGyroPermission(silent) {
-  if (typeof DeviceOrientationEvent.requestPermission === 'function') {
-    DeviceOrientationEvent.requestPermission().then(state => {
-      if (state === 'granted') {
-        gyroPermissionGranted = true;
-        localStorage.setItem('sbo_gyro_granted', 'true');
-        startGyroListener();
-      } else if (!silent) {
-        gyroEnabled = false;
-      }
-    }).catch(() => { if (!silent) gyroEnabled = false; });
-  } else {
-    startGyroListener();
-  }
-}
-
-function startGyroListener() {
-  gyroActive = true;
-  let lastTime = 0;
-  window.addEventListener('deviceorientation', e => {
-    if (!gyroEnabled || !animationsEnabled) return;
-    const now = Date.now();
-    if (now - lastTime < 16) return;
-    lastTime = now;
-    const beta = Math.max(-TILT_MAX, Math.min(TILT_MAX, (e.beta || 0) - 40));
-    const gamma = Math.max(-TILT_MAX, Math.min(TILT_MAX, e.gamma || 0));
-    const rX = (-beta * TILT_GYRO_SCALE);
-    const rY = (gamma * TILT_GYRO_SCALE);
-    document.querySelectorAll('.obs-card').forEach(card => {
-      applyCardTilt(card, rX, rY);
-    });
-  }, { passive: true });
-}
-
-function showMotionPrompt() {
-  if (typeof DeviceOrientationEvent === 'undefined') return;
-  if (typeof DeviceOrientationEvent.requestPermission !== 'function') return;
-  if (localStorage.getItem('sbo_gyro_granted') === 'true') return;
-  const prompt = document.getElementById('motionPrompt');
-  if (prompt) prompt.classList.add('show');
-}
-
-document.getElementById('motionEnableBtn').addEventListener('click', () => {
-  Haptic.medium();
-  requestGyroPermission(false);
-  const prompt = document.getElementById('motionPrompt');
-  if (prompt) prompt.classList.remove('show');
-});
-document.getElementById('motionSkipBtn').addEventListener('click', () => {
-  Haptic.light();
-  const prompt = document.getElementById('motionPrompt');
-  if (prompt) prompt.classList.remove('show');
-});
-
-/* ── MOUSE PARALLAX (desktop fallback) ─────────────────── */
-function initMouseParallax() {
-  const mc = document.getElementById('mainContent');
-  if (!mc) return;
-  mc.addEventListener('mousemove', e => {
-    if (!animationsEnabled || gyroActive) return;
-    const card = e.target.closest('.obs-card');
-    if (!card) {
-      if (hoveredCard) { resetCardTilt(hoveredCard); hoveredCard = null; }
-      return;
-    }
-    if (hoveredCard && hoveredCard !== card) { resetCardTilt(hoveredCard); }
-    hoveredCard = card;
-    const rect = card.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width - 0.5;
-    const y = (e.clientY - rect.top) / rect.height - 0.5;
-    const rY = x * TILT_MAX * 2;
-    const rX = -y * TILT_MAX * 2;
-    applyCardTilt(card, rX, rY);
-  }, { passive: true });
-  mc.addEventListener('mouseleave', () => {
-    if (hoveredCard) { resetCardTilt(hoveredCard); hoveredCard = null; }
-  });
-  mc.addEventListener('scroll', () => {
-    if (hoveredCard) { resetCardTilt(hoveredCard); hoveredCard = null; }
-  }, { passive: true });
-}
+})();
 
 /* ── EDGE FLASH ───────────────────────────────────────────── */
 function showEdgeFlash(type) {
@@ -1731,8 +1661,7 @@ function showSaveSplash() {
 document.getElementById("bottomNav").addEventListener("click", e => {
   const btn = e.target.closest(".nav-tab");
   if (!btn) return;
-  Haptic.light();
-  
+  Haptic.nav();
   switchTab(btn.dataset.tab);
 });
 function switchTab(tab) {
