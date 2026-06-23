@@ -2414,9 +2414,9 @@ function initVideoIntro() {
   const isMobile = !isTablet && /Mobi|Android|iPhone|iPod/i.test(ua);
 
   // Assign correct video per device
-  if (isMobile)      introVideo.src = 'vid.mov';
-  else if (isTablet) introVideo.src = 'vid-tab.mov';
-  else               introVideo.src = 'vid-lap.mov';
+  if (isMobile)      introVideo.src = 'vid.mp4';
+  else if (isTablet) introVideo.src = 'vid-tab.mp4';
+  else               introVideo.src = 'vid-lap.mp4';
 
   introVideo.load();
   videoIntro.classList.remove('hidden');
