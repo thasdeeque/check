@@ -2405,29 +2405,47 @@ function initVideoIntro() {
   const videoIntro = document.getElementById('videoIntro');
   const introVideo = document.getElementById('introVideo');
   if (!videoIntro || !introVideo) return;
-  const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-  if (!isMobile) { videoIntro.classList.add('hidden'); return; }
+
+  // Detect device type
+  const ua = navigator.userAgent;
+  const isTablet = /iPad/i.test(ua) ||
+                   (/Android/i.test(ua) && !/Mobile/i.test(ua)) ||
+                   (navigator.maxTouchPoints > 1 && /Macintosh/i.test(ua));
+  const isMobile = !isTablet && /Mobi|Android|iPhone|iPod/i.test(ua);
+
+  // Assign correct video per device
+  if (isMobile)      introVideo.src = 'vid.mov';
+  else if (isTablet) introVideo.src = 'vid-tab.mov';
+  else               introVideo.src = 'vid-lap.mov';
+
+  introVideo.load();
   videoIntro.classList.remove('hidden');
+
   // Start prefetching backend data during video
   videoPreloadedEveryone = fetch(SCRIPT_URL).then(r => r.json()).catch(() => null);
   videoPreloadedFixed = fetch(SCRIPT_URL + "?action=fixed").then(r => r.json()).catch(() => null);
+
   function skipVideo() {
     videoIntro.classList.add('fade-out');
     setTimeout(() => { videoIntro.classList.add('hidden'); videoIntro.classList.remove('fade-out'); }, 700);
   }
+
   introVideo.addEventListener('playing', () => {
     const loader = document.getElementById('videoLoader');
     if (loader) loader.style.display = 'none';
   });
   introVideo.addEventListener('ended', skipVideo);
+
   if (introVideo.readyState >= 3) {
     const loader = document.getElementById('videoLoader');
     if (loader) loader.style.display = 'none';
   }
+
   const playPromise = introVideo.play();
   if (playPromise !== undefined) {
     playPromise.catch(skipVideo);
   }
+
   // Failsafe: skip after 15s if video hangs
   setTimeout(() => { if (!videoIntro.classList.contains('hidden')) skipVideo(); }, 15000);
 }
